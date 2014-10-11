@@ -22,6 +22,7 @@ type dialogUI struct {
 	rbNumberUnitBytes_02		*walk.RadioButton
 	rbNumberUnitBytes_01		*walk.RadioButton
 	
+	gBoxFnOps								*walk.GroupBox
 	cbInverseFunction				*walk.CheckBox
 	cbHyperbolicFunction		*walk.CheckBox
 	
@@ -30,7 +31,7 @@ type dialogUI struct {
 	tbClearError						*walk.ToolButton
 	tbClear									*walk.ToolButton
 	
-	gBoxFnOps										*walk.GroupBox
+	gBoxFnsOps									*walk.GroupBox
 	tbStatistical								*walk.ToolButton
 	tbAverage										*walk.ToolButton
 	tbSum												*walk.ToolButton
@@ -274,7 +275,46 @@ func (w *Dialog) init(owner walk.Form) (err error) {
 	
 	line_pos += 32
 	add_w = 0
-
+	
+	pos_x = gap_x; pos_y = line_pos; add_w = 270/2; add_h = 32
+	// gBoxFnOps
+	if w.ui.gBoxFnOps, err = walk.NewGroupBox(w); err != nil {
+		return err
+	}
+	w.ui.gBoxFnOps.SetName("gBoxFnOps")
+	if err := w.ui.gBoxFnOps.SetBounds(walk.Rectangle{pos_x, pos_y, add_w, add_h}); err != nil {
+		return err
+	}
+	//if err := w.ui.gBoxFnOps.SetTitle(nil); err != nil {
+	//	return err
+	//}
+	
+	pos_x = gap_x; pos_y += 0; add_w = (add_w - (gap_y * 6))/4; add_h = 18
+	// cbInverseFunction
+	if w.ui.cbInverseFunction, err = walk.NewCheckBox(w.ui.gBoxFnOps); err != nil {
+		return err
+	}
+	w.ui.cbInverseFunction.SetName("cbInverseFunction")
+	if err := w.ui.cbInverseFunction.SetBounds(walk.Rectangle{pos_x, pos_y, add_w, add_h}); err != nil {
+		return err
+	}
+	if err := w.ui.cbInverseFunction.SetText(`Single`); err != nil {
+		return err
+	}
+	
+	pos_x += gap_x + add_w; pos_y += 0; add_w += 0; add_h += 0
+	// cbHyperbolicFunction
+	if w.ui.cbHyperbolicFunction, err = walk.NewCheckBox(w.ui.gBoxFnOps); err != nil {
+		return err
+	}
+	w.ui.cbHyperbolicFunction.SetName("cbHyperbolicFunction")
+	if err := w.ui.cbHyperbolicFunction.SetBounds(walk.Rectangle{pos_x, pos_y, add_w, add_h}); err != nil {
+		return err
+	}
+	if err := w.ui.cbHyperbolicFunction.SetText(`Single`); err != nil {
+		return err
+	}
+	
 	pos_x = row_pos; pos_y = line_pos; add_w = 270; add_h = 32
 	// gBoxActOps
 	//if w.ui.gBoxActOps, err = walk.NewGroupBox(w); err != nil {
@@ -742,12 +782,11 @@ func (w *Dialog) init(owner walk.Form) (err error) {
 	}
 	w.ui.tbCharF.SetEnabled(false)
 	
-	line_pos = line_pos_4
 	add_w = 0
+	line_pos = line_pos_4
 	pos_x = gap_x; pos_y = line_pos; add_w = 270; add_h = 32
-	// gBoxFnOps
-
 	pos_x += gap_x; pos_y += gap_y; add_w = (add_w - (gap_y * 6))/6; add_h = 32
+	
 	// tbStatistical
 	if w.ui.tbStatistical, err = walk.NewToolButton(w); err != nil {
 		return err
@@ -812,7 +851,10 @@ func (w *Dialog) init(owner walk.Form) (err error) {
 		return err
 	}
 	
+	line_pos += 32 + gap_y
+	pos_x = gap_x; pos_y = line_pos; add_w = 270; add_h = 32
 	pos_x += gap_x; pos_y += gap_y; add_w = (add_w - (gap_y * 6))/6; add_h = 32
+	
 	// tbAverage
 	if w.ui.tbAverage, err = walk.NewToolButton(w); err != nil {
 		return err
@@ -824,6 +866,7 @@ func (w *Dialog) init(owner walk.Form) (err error) {
 	if err := w.ui.tbAverage.SetText(`Ave`); err != nil {
 		return err
 	}
+	w.ui.tbAverage.SetEnabled(false)
 	
 	pos_x += gap_x + add_w * 3/2; pos_y += 0; add_w += 0; add_h += 0
 	// tbFnDms
@@ -852,28 +895,235 @@ func (w *Dialog) init(owner walk.Form) (err error) {
 	}
 	
 	pos_x += gap_x + add_w; pos_y += 0; add_w += 0; add_h += 0
-	// tbFnRightBracket
-	if w.ui.tbFnRightBracket, err = walk.NewToolButton(w); err != nil {
+	// tbFnLn
+	if w.ui.tbFnLn, err = walk.NewToolButton(w); err != nil {
 		return err
 	}
-	w.ui.tbFnRightBracket.SetName("tbFnRightBracket")
-	if err := w.ui.tbFnRightBracket.SetBounds(walk.Rectangle{pos_x, pos_y, add_w, add_h}); err != nil {
+	w.ui.tbFnLn.SetName("tbFnLn")
+	if err := w.ui.tbFnLn.SetBounds(walk.Rectangle{pos_x, pos_y, add_w, add_h}); err != nil {
 		return err
 	}
-	if err := w.ui.tbFnRightBracket.SetText(`)`); err != nil {
+	if err := w.ui.tbFnLn.SetText(`Ln`); err != nil {
 		return err
 	}
 	
 	pos_x += gap_x + add_w * 3/2; pos_y += 0; add_w += 0; add_h += 0
-	// tbFnMC
-	if w.ui.tbFnMC, err = walk.NewToolButton(w); err != nil {
+	// tbFnMR
+	if w.ui.tbFnMR, err = walk.NewToolButton(w); err != nil {
 		return err
 	}
-	w.ui.tbFnMC.SetName("tbFnMC")
-	if err := w.ui.tbFnMC.SetBounds(walk.Rectangle{pos_x, pos_y, add_w, add_h}); err != nil {
+	w.ui.tbFnMR.SetName("tbFnMR")
+	if err := w.ui.tbFnMR.SetBounds(walk.Rectangle{pos_x, pos_y, add_w, add_h}); err != nil {
 		return err
 	}
-	if err := w.ui.tbFnMC.SetText(`MC`); err != nil {
+	if err := w.ui.tbFnMR.SetText(`MR`); err != nil {
+		return err
+	}
+	
+	line_pos += 32 + gap_y
+	pos_x = gap_x; pos_y = line_pos; add_w = 270; add_h = 32
+	pos_x += gap_x; pos_y += gap_y; add_w = (add_w - (gap_y * 6))/6; add_h = 32
+	
+	// tbSum
+	if w.ui.tbSum, err = walk.NewToolButton(w); err != nil {
+		return err
+	}
+	w.ui.tbSum.SetName("tbSum")
+	if err := w.ui.tbSum.SetBounds(walk.Rectangle{pos_x, pos_y, add_w, add_h}); err != nil {
+		return err
+	}
+	if err := w.ui.tbSum.SetText(`Sum`); err != nil {
+		return err
+	}
+	w.ui.tbSum.SetEnabled(false)
+	
+	pos_x += gap_x + add_w * 3/2; pos_y += 0; add_w += 0; add_h += 0
+	// tbFnSin
+	if w.ui.tbFnSin, err = walk.NewToolButton(w); err != nil {
+		return err
+	}
+	w.ui.tbFnSin.SetName("tbFnSin")
+	if err := w.ui.tbFnSin.SetBounds(walk.Rectangle{pos_x, pos_y, add_w, add_h}); err != nil {
+		return err
+	}
+	if err := w.ui.tbFnSin.SetText(`sin`); err != nil {
+		return err
+	}
+	
+	pos_x += gap_x + add_w; pos_y += 0; add_w += 0; add_h += 0
+	// tbFnXpowerY
+	if w.ui.tbFnXpowerY, err = walk.NewToolButton(w); err != nil {
+		return err
+	}
+	w.ui.tbFnXpowerY.SetName("tbFnXpowerY")
+	if err := w.ui.tbFnXpowerY.SetBounds(walk.Rectangle{pos_x, pos_y, add_w, add_h}); err != nil {
+		return err
+	}
+	if err := w.ui.tbFnXpowerY.SetText(`x^y`); err != nil {
+		return err
+	}
+	
+	pos_x += gap_x + add_w; pos_y += 0; add_w += 0; add_h += 0
+	// tbFnLog
+	if w.ui.tbFnLog, err = walk.NewToolButton(w); err != nil {
+		return err
+	}
+	w.ui.tbFnLog.SetName("tbFnLog")
+	if err := w.ui.tbFnLog.SetBounds(walk.Rectangle{pos_x, pos_y, add_w, add_h}); err != nil {
+		return err
+	}
+	if err := w.ui.tbFnLog.SetText(`Log`); err != nil {
+		return err
+	}
+	
+	pos_x += gap_x + add_w * 3/2; pos_y += 0; add_w += 0; add_h += 0
+	// tbFnLog
+	if w.ui.tbFnLog, err = walk.NewToolButton(w); err != nil {
+		return err
+	}
+	w.ui.tbFnLog.SetName("tbFnLog")
+	if err := w.ui.tbFnLog.SetBounds(walk.Rectangle{pos_x, pos_y, add_w, add_h}); err != nil {
+		return err
+	}
+	if err := w.ui.tbFnLog.SetText(`Log`); err != nil {
+		return err
+	}
+	
+	line_pos += 32 + gap_y
+	pos_x = gap_x; pos_y = line_pos; add_w = 270; add_h = 32
+	pos_x += gap_x; pos_y += gap_y; add_w = (add_w - (gap_y * 6))/6; add_h = 32
+	
+	// tbs
+	if w.ui.tbs, err = walk.NewToolButton(w); err != nil {
+		return err
+	}
+	w.ui.tbs.SetName("tbs")
+	if err := w.ui.tbs.SetBounds(walk.Rectangle{pos_x, pos_y, add_w, add_h}); err != nil {
+		return err
+	}
+	if err := w.ui.tbs.SetText(`s`); err != nil {
+		return err
+	}
+	w.ui.tbs.SetEnabled(false)
+	
+	pos_x += gap_x + add_w * 3/2; pos_y += 0; add_w += 0; add_h += 0
+	// tbFnCos
+	if w.ui.tbFnCos, err = walk.NewToolButton(w); err != nil {
+		return err
+	}
+	w.ui.tbFnCos.SetName("tbFnSin")
+	if err := w.ui.tbFnCos.SetBounds(walk.Rectangle{pos_x, pos_y, add_w, add_h}); err != nil {
+		return err
+	}
+	if err := w.ui.tbFnCos.SetText(`cos`); err != nil {
+		return err
+	}
+	
+	pos_x += gap_x + add_w; pos_y += 0; add_w += 0; add_h += 0
+	// tbFnXpower3
+	if w.ui.tbFnXpower3, err = walk.NewToolButton(w); err != nil {
+		return err
+	}
+	w.ui.tbFnXpower3.SetName("tbFnXpower3")
+	if err := w.ui.tbFnXpower3.SetBounds(walk.Rectangle{pos_x, pos_y, add_w, add_h}); err != nil {
+		return err
+	}
+	if err := w.ui.tbFnXpower3.SetText(`x^3`); err != nil {
+		return err
+	}
+	
+	pos_x += gap_x + add_w; pos_y += 0; add_w += 0; add_h += 0
+	// tbFnNFactorial
+	if w.ui.tbFnNFactorial, err = walk.NewToolButton(w); err != nil {
+		return err
+	}
+	w.ui.tbFnNFactorial.SetName("tbFnNFactorial")
+	if err := w.ui.tbFnNFactorial.SetBounds(walk.Rectangle{pos_x, pos_y, add_w, add_h}); err != nil {
+		return err
+	}
+	if err := w.ui.tbFnNFactorial.SetText(`n!`); err != nil {
+		return err
+	}
+	
+	pos_x += gap_x + add_w * 3/2; pos_y += 0; add_w += 0; add_h += 0
+	// tbFnMA
+	if w.ui.tbFnMA, err = walk.NewToolButton(w); err != nil {
+		return err
+	}
+	w.ui.tbFnMA.SetName("tbFnMA")
+	if err := w.ui.tbFnMA.SetBounds(walk.Rectangle{pos_x, pos_y, add_w, add_h}); err != nil {
+		return err
+	}
+	if err := w.ui.tbFnMA.SetText(`M+`); err != nil {
+		return err
+	}
+	
+	line_pos += 32 + gap_y
+	pos_x = gap_x; pos_y = line_pos; add_w = 270; add_h = 32
+	pos_x += gap_x; pos_y += gap_y; add_w = (add_w - (gap_y * 6))/6; add_h = 32
+	
+	// tbDat
+	if w.ui.tbDat, err = walk.NewToolButton(w); err != nil {
+		return err
+	}
+	w.ui.tbDat.SetName("tbDat")
+	if err := w.ui.tbDat.SetBounds(walk.Rectangle{pos_x, pos_y, add_w, add_h}); err != nil {
+		return err
+	}
+	if err := w.ui.tbDat.SetText(`Dat`); err != nil {
+		return err
+	}
+	w.ui.tbDat.SetEnabled(false)
+	
+	pos_x += gap_x + add_w * 3/2; pos_y += 0; add_w += 0; add_h += 0
+	// tbFnTan
+	if w.ui.tbFnTan, err = walk.NewToolButton(w); err != nil {
+		return err
+	}
+	w.ui.tbFnTan.SetName("tbFnTan")
+	if err := w.ui.tbFnTan.SetBounds(walk.Rectangle{pos_x, pos_y, add_w, add_h}); err != nil {
+		return err
+	}
+	if err := w.ui.tbFnTan.SetText(`tan`); err != nil {
+		return err
+	}
+	
+	pos_x += gap_x + add_w; pos_y += 0; add_w += 0; add_h += 0
+	// tbFnXpower2
+	if w.ui.tbFnXpower2, err = walk.NewToolButton(w); err != nil {
+		return err
+	}
+	w.ui.tbFnXpower2.SetName("tbFnXpower2")
+	if err := w.ui.tbFnXpower2.SetBounds(walk.Rectangle{pos_x, pos_y, add_w, add_h}); err != nil {
+		return err
+	}
+	if err := w.ui.tbFnXpower2.SetText(`x^2`); err != nil {
+		return err
+	}
+	
+	pos_x += gap_x + add_w; pos_y += 0; add_w += 0; add_h += 0
+	// tbFnXReciprocal
+	if w.ui.tbFnXReciprocal, err = walk.NewToolButton(w); err != nil {
+		return err
+	}
+	w.ui.tbFnXReciprocal.SetName("tbFnXReciprocal")
+	if err := w.ui.tbFnXReciprocal.SetBounds(walk.Rectangle{pos_x, pos_y, add_w, add_h}); err != nil {
+		return err
+	}
+	if err := w.ui.tbFnXReciprocal.SetText(`1/x`); err != nil {
+		return err
+	}
+	
+	pos_x += gap_x + add_w * 3/2; pos_y += 0; add_w += 0; add_h += 0
+	// tbFnPI
+	if w.ui.tbFnPI, err = walk.NewToolButton(w); err != nil {
+		return err
+	}
+	w.ui.tbFnPI.SetName("tbFnPI")
+	if err := w.ui.tbFnPI.SetBounds(walk.Rectangle{pos_x, pos_y, add_w, add_h}); err != nil {
+		return err
+	}
+	if err := w.ui.tbFnPI.SetText(`PI`); err != nil {
 		return err
 	}
 	
