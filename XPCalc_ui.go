@@ -8,6 +8,8 @@ import (
 )
 
 type dialogUI struct {
+	windowIcon *walk.Icon
+	
 	textEdit               *walk.TextEdit
 	
 	gBoxNumberNotation			*walk.GroupBox
@@ -121,7 +123,7 @@ func (w *Dialog) init(owner walk.Form) (err error) {
 	}
 
 	w.SetName("XPCalc")
-	if err := w.SetClientSize(walk.Size{600, 300}); err != nil {
+	if err := w.SetClientSize(walk.Size{560, 300}); err != nil {
 		return err
 	}
 	if err := w.SetTitle(`XPCalc`); err != nil {
@@ -784,7 +786,7 @@ func (w *Dialog) init(owner walk.Form) (err error) {
 	
 	add_w = 0
 	line_pos = line_pos_4
-	pos_x = gap_x; pos_y = line_pos; add_w = 270; add_h = 32
+	pos_x = gap_x; pos_y = line_pos; add_w = 250; add_h = 32
 	pos_x += gap_x; pos_y += gap_y; add_w = (add_w - (gap_y * 6))/6; add_h = 32
 	
 	// tbStatistical
@@ -852,7 +854,7 @@ func (w *Dialog) init(owner walk.Form) (err error) {
 	}
 	
 	line_pos += 32 + gap_y
-	pos_x = gap_x; pos_y = line_pos; add_w = 270; add_h = 32
+	pos_x = gap_x; pos_y = line_pos; add_w = 250; add_h = 32
 	pos_x += gap_x; pos_y += gap_y; add_w = (add_w - (gap_y * 6))/6; add_h = 32
 	
 	// tbAverage
@@ -921,7 +923,7 @@ func (w *Dialog) init(owner walk.Form) (err error) {
 	}
 	
 	line_pos += 32 + gap_y
-	pos_x = gap_x; pos_y = line_pos; add_w = 270; add_h = 32
+	pos_x = gap_x; pos_y = line_pos; add_w = 250; add_h = 32
 	pos_x += gap_x; pos_y += gap_y; add_w = (add_w - (gap_y * 6))/6; add_h = 32
 	
 	// tbSum
@@ -990,7 +992,7 @@ func (w *Dialog) init(owner walk.Form) (err error) {
 	}
 	
 	line_pos += 32 + gap_y
-	pos_x = gap_x; pos_y = line_pos; add_w = 270; add_h = 32
+	pos_x = gap_x; pos_y = line_pos; add_w = 250; add_h = 32
 	pos_x += gap_x; pos_y += gap_y; add_w = (add_w - (gap_y * 6))/6; add_h = 32
 	
 	// tbs
@@ -1059,7 +1061,7 @@ func (w *Dialog) init(owner walk.Form) (err error) {
 	}
 	
 	line_pos += 32 + gap_y
-	pos_x = gap_x; pos_y = line_pos; add_w = 270; add_h = 32
+	pos_x = gap_x; pos_y = line_pos; add_w = 250; add_h = 32
 	pos_x += gap_x; pos_y += gap_y; add_w = (add_w - (gap_y * 6))/6; add_h = 32
 	
 	// tbDat
@@ -1126,6 +1128,18 @@ func (w *Dialog) init(owner walk.Form) (err error) {
 	if err := w.ui.tbFnPI.SetText(`PI`); err != nil {
 		return err
 	}
+	
+	
+	//ic, err := walk.NewIconFromImage(makeDigitImage(counter))
+	icon, err := walk.NewIconFromFile("./icon/4.ico")
+	if err != nil {
+		return
+	}
+	w.SetIcon(icon)
+	if w.ui.windowIcon != nil {
+		w.ui.windowIcon.Dispose()
+	}
+	w.ui.windowIcon = icon
 	
 	succeeded = true
 
