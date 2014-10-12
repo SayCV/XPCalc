@@ -7,12 +7,6 @@ import (
 	"github.com/lxn/walk"
 )
 
-// Predefined icon constants
-const (
-	IDI_ICON  = 3
-	IDI_TITLE = 5
-)
-
 type dialogUI struct {
 	windowIcon *walk.Icon
 	
@@ -297,7 +291,7 @@ func (w *Dialog) init(owner walk.Form) (err error) {
 	//	return err
 	//}
 	
-	pos_x = gap_x; pos_y += 0; add_w = (add_w - (gap_y * 6))/4; add_h = 18
+	pos_x = gap_x; pos_y = gap_y * 6; add_w = (add_w - (gap_y * 2))/2; add_h = 18
 	// cbInverseFunction
 	if w.ui.cbInverseFunction, err = walk.NewCheckBox(w.ui.gBoxFnOps); err != nil {
 		return err
@@ -306,7 +300,7 @@ func (w *Dialog) init(owner walk.Form) (err error) {
 	if err := w.ui.cbInverseFunction.SetBounds(walk.Rectangle{pos_x, pos_y, add_w, add_h}); err != nil {
 		return err
 	}
-	if err := w.ui.cbInverseFunction.SetText(`Single`); err != nil {
+	if err := w.ui.cbInverseFunction.SetText(`Inv`); err != nil {
 		return err
 	}
 	
@@ -319,7 +313,7 @@ func (w *Dialog) init(owner walk.Form) (err error) {
 	if err := w.ui.cbHyperbolicFunction.SetBounds(walk.Rectangle{pos_x, pos_y, add_w, add_h}); err != nil {
 		return err
 	}
-	if err := w.ui.cbHyperbolicFunction.SetText(`Single`); err != nil {
+	if err := w.ui.cbHyperbolicFunction.SetText(`Hyp`); err != nil {
 		return err
 	}
 	
