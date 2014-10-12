@@ -1,0 +1,3 @@
+ICON_MAIN ICON "./icon/6.ico"
+ICON_CALC ICON "./icon/1.ico"
+1 MANIFEST "dft.exe.manifest"

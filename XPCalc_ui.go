@@ -7,6 +7,12 @@ import (
 	"github.com/lxn/walk"
 )
 
+// Predefined icon constants
+const (
+	IDI_ICON  = 3
+	IDI_TITLE = 5
+)
+
 type dialogUI struct {
 	windowIcon *walk.Icon
 	
@@ -1131,7 +1137,8 @@ func (w *Dialog) init(owner walk.Form) (err error) {
 	
 	
 	//ic, err := walk.NewIconFromImage(makeDigitImage(counter))
-	icon, err := walk.NewIconFromFile("./icon/4.ico")
+	//icon, err := walk.NewIconFromFile("./icon/4.ico")
+	icon, err := walk.NewIconFromResource("ICON_CALC")
 	if err != nil {
 		return
 	}
