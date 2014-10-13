@@ -13,6 +13,7 @@ import (
 type Dialog struct {
 	*walk.Dialog
 	ui dialogUI
+	ops   string
 }
 
 func rbNumberNotation_10_onCliced(dlg *Dialog) {
@@ -38,6 +39,7 @@ func runDialog(owner walk.Form) (int, error) {
 	}
 
 	// TODO: Do further required setup, e.g. for event handling, here.
+	
 	dlg.ui.rbNumberNotation_16.Clicked().Attach(func() {
 		fmt.Println("Clicked rbNumberNotation_16")
 		rbNumberNotation_xx_onCliced(dlg)
@@ -57,7 +59,22 @@ func runDialog(owner walk.Form) (int, error) {
 	
 	dlg.ui.tbBackspace.Clicked().Attach(func() {
 		fmt.Println("Clicked tbBackspace")
-		//dlg.ui.rbNumberUnitBytes_01.SetVisible(false)
+		
+		// Removed last character of a string
+		dlg.ops = dlg.ui.textEdit.Text()
+		sz := len(dlg.ops)
+		if sz > 0 {
+    	dlg.ops = dlg.ops[:sz-1]
+		}
+		dlg.ui.textEdit.SetText(dlg.ops)
+	})
+	dlg.ui.tbClearError.Clicked().Attach(func() {
+		fmt.Println("Clicked tbClearError")
+		dlg.ui.textEdit.SetText(``)
+	})
+	dlg.ui.tbClear.Clicked().Attach(func() {
+		fmt.Println("Clicked tbClear")
+		dlg.ui.textEdit.SetText(``)
 	})
 	
 	return dlg.Run(), nil
