@@ -5,6 +5,7 @@ package main
 
 import (
 	"github.com/lxn/walk"
+	//. "github.com/lxn/walk/declarative"
 )
 
 type dialogUI struct {
@@ -1146,3 +1147,4 @@ func (w *Dialog) init(owner walk.Form) (err error) {
 
 	return nil
 }
+
