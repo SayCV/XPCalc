@@ -117,7 +117,7 @@ func appendByte(dlg *Dialog, c byte) {
 	var buffer bytes.Buffer
 	var result string
 	
-	if dlg.ops.flag = OPS_ACT {
+	if dlg.ops.flag == OPS_ACT {
 		result = ""
 	} else {
 		result = dlg.ui.textEdit.Text()
