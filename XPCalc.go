@@ -14,13 +14,18 @@ import (
 	"github.com/lxn/walk"
 )
 
+// Constants for XPCalcOps.flag
+const (
+	OPS_NONE        = 1
+	OPS_OBJ         = 2
+	OPS_ACT         = 4
+)
+
 type XPCalcOps struct {
-	result string
-	//val_1st string
-	//val_2nd string
+	val_1st string
+	val_2nd string
 	ops string
-	value string
-	flag bool
+	flag uint32
 }
 
 type Dialog struct {
@@ -32,8 +37,8 @@ type Dialog struct {
 func opsRun(dlg *Dialog) {
 	//dlg.ops.result = dlg.ui.textEdit.Text()
 	
-	val_1st, _ := strconv.ParseFloat(dlg.ops.result, 64)
-	val_2nd, _ := strconv.ParseFloat(dlg.ops.value, 64)
+	val_1st, _ := strconv.ParseFloat(dlg.ops.val_1st, 64)
+	val_2nd, _ := strconv.ParseFloat(dlg.ops.val_2nd, 64)
 	var result float64
 	
 	switch dlg.ops.ops {
@@ -48,15 +53,15 @@ func opsRun(dlg *Dialog) {
 		case "=":
 			result = val_1st / val_2nd
 	}
-	dlg.ops.flag = true
-	dlg.ops.result = strconv.FormatFloat(result, 'g', 'e', 64)
-	dlg.ui.textEdit.SetText(dlg.ops.result)
+	dlg.ops.flag = OPS_ACT
+	val := strconv.FormatFloat(result, 'g', 'e', 64)
+	dlg.ui.textEdit.SetText(val)
+	dlg.ops.val_1st = val
 	
 	fmt.Printf("val_1st = %.6f\n", val_1st)
 	fmt.Printf("ops = %s\n", dlg.ops.ops)
 	fmt.Printf("val_2nd = %.6f\n", val_2nd)
-	fmt.Printf("result = %.6f\n", result)
-	fmt.Printf("result = %s\n", dlg.ops.result)
+	fmt.Printf("result = %s\n", val)
 }
 
 func rbNumberNotation_onCliced_btnInit(dlg *Dialog) {
@@ -110,12 +115,27 @@ func rbNumberNotation_onCliced_btnInit(dlg *Dialog) {
 
 func appendByte(dlg *Dialog, c byte) {
 	var buffer bytes.Buffer
-	dlg.ops.result = dlg.ui.textEdit.Text()
-	//dlg.ops.result += string(c)
-	buffer.WriteString(dlg.ops.result)
-	buffer.WriteString(string(c))
-	dlg.ops.result = buffer.String()
-	dlg.ui.textEdit.SetText(dlg.ops.result)
+	var result string
+	
+	if dlg.ops.flag = OPS_ACT {
+		result = ""
+	} else {
+		result = dlg.ui.textEdit.Text()
+	}
+	
+	dlg.ops.flag = OPS_OBJ
+	
+	if result == "0" {
+		result = string(c)
+	} else {
+		//result += string(c)
+		buffer.WriteString(result)
+		buffer.WriteString(string(c))
+		result = buffer.String()
+	}
+	dlg.ui.textEdit.SetText(result)
+	dlg.ops.flag = OPS_OBJ
+	dlg.ops.val_2nd = result
 }
 
 func runDialog(owner walk.Form) (int, error) {
@@ -124,9 +144,9 @@ func runDialog(owner walk.Form) (int, error) {
 		return 0, err
 	}
 	
-	dlg.ops.flag = false
-	dlg.ops.result = dlg.ui.textEdit.Text()
-	dlg.ops.value = dlg.ops.result
+	dlg.ops.flag = OPS_NONE
+	dlg.ops.val_1st = "0"
+	dlg.ops.val_2nd = ""
 	bStatisticalOpen := false
 	
 	// TODO: Do further required setup, e.g. for event handling, here.
@@ -152,25 +172,29 @@ func runDialog(owner walk.Form) (int, error) {
 		fmt.Println("Clicked tbBackspace")
 		
 		// Removed last character of a string
-		dlg.ops.result = dlg.ui.textEdit.Text()
-		sz := len(dlg.ops.result)
+		result := dlg.ui.textEdit.Text()
+		sz := len(result)
 		if sz > 0 {
-    	dlg.ops.result = dlg.ops.result[:sz-1]
+    	result = result[:sz-1]
 		}
-		if len(dlg.ops.result)==0 {
-			dlg.ops.result = "0"
+		if len(result)==0 {
+			result = "0"
 		}
-		dlg.ops.result = dlg.ui.textEdit.Text()
+		dlg.ui.textEdit.SetText(result)
 	})
 	dlg.ui.tbClearError.Clicked().Attach(func() {
 		fmt.Println("Clicked tbClearError")
 		dlg.ui.textEdit.SetText(`0`)
-		dlg.ops.result = dlg.ui.textEdit.Text()
+		dlg.ops.val_1st = dlg.ui.textEdit.Text()
+		dlg.ops.val_2nd = ""
+		dlg.ops.ops     = ""
 	})
 	dlg.ui.tbClear.Clicked().Attach(func() {
 		fmt.Println("Clicked tbClear")
 		dlg.ui.textEdit.SetText(`0`)
-		dlg.ops.result = dlg.ui.textEdit.Text()
+		dlg.ops.val_1st = dlg.ui.textEdit.Text()
+		dlg.ops.val_2nd = ""
+		dlg.ops.ops     = ""
 	})
 	
 	dlg.ui.tbNumber0.Clicked().Attach(func() {
@@ -257,25 +281,21 @@ func runDialog(owner walk.Form) (int, error) {
 		fmt.Println("Clicked tbOpsAdd")
 		//dlg.ui.textEdit.SetText(``)
 		dlg.ops.ops = "+"
-		dlg.ops.value = dlg.ui.textEdit.Text()
 		opsRun(dlg)
 	})
 	dlg.ui.tbOpsSub.Clicked().Attach(func() {
 		fmt.Println("Clicked tbOpsSub")
 		dlg.ops.ops = "-"
-		dlg.ops.value = dlg.ui.textEdit.Text()
 		opsRun(dlg)
 	})
 	dlg.ui.tbOpsMul.Clicked().Attach(func() {
 		fmt.Println("Clicked tbOpsMul")
 		dlg.ops.ops = "*"
-		dlg.ops.value = dlg.ui.textEdit.Text()
 		opsRun(dlg)
 	})
 	dlg.ui.tbOpsDiv.Clicked().Attach(func() {
 		fmt.Println("Clicked tbOpsDiv")
 		dlg.ops.ops = "/"
-		dlg.ops.value = dlg.ui.textEdit.Text()
 		opsRun(dlg)
 	})
 	dlg.ui.tbOpsEqual.Clicked().Attach(func() {
