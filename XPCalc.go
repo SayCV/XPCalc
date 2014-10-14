@@ -3,33 +3,116 @@ package main
 import (
 	"fmt"
 	//"log"
+	//"math/rand"
+	"bytes"
+	//"strings"
 	//"time"
+	"strconv"
 )
 
 import (
 	"github.com/lxn/walk"
 )
 
+type XPCalcOps struct {
+	result string
+	//val_1st string
+	//val_2nd string
+	ops string
+	value string
+}
+
 type Dialog struct {
 	*walk.Dialog
 	ui dialogUI
-	ops   string
+	ops XPCalcOps
 }
 
-func rbNumberNotation_10_onCliced(dlg *Dialog) {
-	dlg.ui.rbNumberUnitBytes_08.SetText(`ang`)
-	dlg.ui.rbNumberUnitBytes_04.SetText(`rad`)
-	dlg.ui.rbNumberUnitBytes_02.SetText(`gar`)
-	dlg.ui.rbNumberUnitBytes_01.SetText(``)
-	dlg.ui.rbNumberUnitBytes_01.SetVisible(false)
+func opsRun(dlg *Dialog) {
+	//dlg.ops.result = dlg.ui.textEdit.Text()
+	
+	val_1st, _ := strconv.ParseFloat(dlg.ops.result, 64)
+	val_2nd, _ := strconv.ParseFloat(dlg.ops.value, 64)
+	var result float64
+	
+	switch dlg.ops.ops {
+		case "+":
+			result = val_1st + val_2nd
+		case "-":
+			result = val_1st - val_2nd
+		case "*":
+			result = val_1st * val_2nd
+		case "/":
+			result = val_1st / val_2nd
+		case "=":
+			result = val_1st / val_2nd
+	}
+	dlg.ops.result = strconv.FormatFloat(result, 'g', 'e', 64)
+	dlg.ui.textEdit.SetText(dlg.ops.result)
+	fmt.Printf("val_1st = %.6f\n", val_1st)
+	fmt.Printf("ops = %s\n", dlg.ops.ops)
+	fmt.Printf("val_2nd = %.6f\n", val_2nd)
+	fmt.Printf("result = %.6f\n", result)
+	fmt.Printf("result = %s\n", dlg.ops.result)
 }
 
-func rbNumberNotation_xx_onCliced(dlg *Dialog) {
-	dlg.ui.rbNumberUnitBytes_08.SetText(`8Bytes`)
-	dlg.ui.rbNumberUnitBytes_04.SetText(`4Bytes`)
-	dlg.ui.rbNumberUnitBytes_02.SetText(`2Bytes`)
-	dlg.ui.rbNumberUnitBytes_01.SetText(`1Bytes`)
-	dlg.ui.rbNumberUnitBytes_01.SetVisible(true)
+func rbNumberNotation_onCliced_btnInit(dlg *Dialog) {
+	enable := dlg.ui.rbNumberNotation_10.Checked()
+	
+	if enable {
+		dlg.ui.rbNumberUnitBytes_08.SetText(`ang`)
+		dlg.ui.rbNumberUnitBytes_04.SetText(`rad`)
+		dlg.ui.rbNumberUnitBytes_02.SetText(`gar`)
+		dlg.ui.rbNumberUnitBytes_01.SetText(``)
+		dlg.ui.rbNumberUnitBytes_01.SetVisible(false)
+	} else {
+		dlg.ui.rbNumberUnitBytes_08.SetText(`8Bytes`)
+		dlg.ui.rbNumberUnitBytes_04.SetText(`4Bytes`)
+		dlg.ui.rbNumberUnitBytes_02.SetText(`2Bytes`)
+		dlg.ui.rbNumberUnitBytes_01.SetText(`1Bytes`)
+		dlg.ui.rbNumberUnitBytes_01.SetVisible(true)
+	}
+
+	dlg.ui.tbFnFsubE.SetEnabled(enable)
+	dlg.ui.tbFnDms.SetEnabled(enable)
+	dlg.ui.tbFnSin.SetEnabled(enable)
+	dlg.ui.tbFnCos.SetEnabled(enable)
+	dlg.ui.tbFnTan.SetEnabled(enable)
+	dlg.ui.tbFnExp.SetEnabled(enable)
+	dlg.ui.tbFnPI.SetEnabled(enable)
+	
+	enable = dlg.ui.rbNumberNotation_16.Checked()
+		
+	dlg.ui.tbCharA.SetEnabled(enable)
+	dlg.ui.tbCharB.SetEnabled(enable)
+	dlg.ui.tbCharC.SetEnabled(enable)
+	dlg.ui.tbCharD.SetEnabled(enable)
+	dlg.ui.tbCharE.SetEnabled(enable)
+	dlg.ui.tbCharF.SetEnabled(enable)
+
+	enable = dlg.ui.rbNumberNotation_08.Checked()
+	dlg.ui.tbNumber8.SetEnabled(!enable)
+	dlg.ui.tbNumber9.SetEnabled(!enable)
+	
+	enable = dlg.ui.rbNumberNotation_02.Checked()
+	dlg.ui.tbNumber2.SetEnabled(!enable)
+	dlg.ui.tbNumber3.SetEnabled(!enable)
+	dlg.ui.tbNumber4.SetEnabled(!enable)
+	dlg.ui.tbNumber5.SetEnabled(!enable)
+	dlg.ui.tbNumber6.SetEnabled(!enable)
+	dlg.ui.tbNumber7.SetEnabled(!enable)
+	dlg.ui.tbNumber8.SetEnabled(!enable)
+	dlg.ui.tbNumber9.SetEnabled(!enable)
+}
+
+func appendByte(dlg *Dialog, c byte) {
+	var buffer bytes.Buffer
+	dlg.ops.result = dlg.ui.textEdit.Text()
+	//dlg.ops.result += string(c)
+	buffer.WriteString(dlg.ops.result)
+	buffer.WriteString(string(c))
+	dlg.ops.result = buffer.String()
+	dlg.ui.textEdit.SetText(dlg.ops.result)
 }
 
 func runDialog(owner walk.Form) (int, error) {
@@ -37,44 +120,163 @@ func runDialog(owner walk.Form) (int, error) {
 	if err := dlg.init(owner); err != nil {
 		return 0, err
 	}
-
+	
+	dlg.ops.result = dlg.ui.textEdit.Text()
+	dlg.ops.value = dlg.ops.result
+	bStatisticalOpen := false
+	
 	// TODO: Do further required setup, e.g. for event handling, here.
 	
 	dlg.ui.rbNumberNotation_16.Clicked().Attach(func() {
 		fmt.Println("Clicked rbNumberNotation_16")
-		rbNumberNotation_xx_onCliced(dlg)
+		rbNumberNotation_onCliced_btnInit(dlg)
 	})
 	dlg.ui.rbNumberNotation_10.Clicked().Attach(func() {
 		fmt.Println("Clicked rbNumberNotation_10")
-		rbNumberNotation_10_onCliced(dlg)
+		rbNumberNotation_onCliced_btnInit(dlg)
 	})
 	dlg.ui.rbNumberNotation_08.Clicked().Attach(func() {
 		fmt.Println("Clicked rbNumberNotation_08")
-		rbNumberNotation_xx_onCliced(dlg)
+		rbNumberNotation_onCliced_btnInit(dlg)
 	})
 	dlg.ui.rbNumberNotation_02.Clicked().Attach(func() {
 		fmt.Println("Clicked rbNumberNotation_02")
-		rbNumberNotation_xx_onCliced(dlg)
+		rbNumberNotation_onCliced_btnInit(dlg)
 	})
 	
 	dlg.ui.tbBackspace.Clicked().Attach(func() {
 		fmt.Println("Clicked tbBackspace")
 		
 		// Removed last character of a string
-		dlg.ops = dlg.ui.textEdit.Text()
-		sz := len(dlg.ops)
+		dlg.ops.result = dlg.ui.textEdit.Text()
+		sz := len(dlg.ops.result)
 		if sz > 0 {
-    	dlg.ops = dlg.ops[:sz-1]
+    	dlg.ops.result = dlg.ops.result[:sz-1]
 		}
-		dlg.ui.textEdit.SetText(dlg.ops)
+		if len(dlg.ops.result)==0 {
+			dlg.ops.result = "0"
+		}
+		dlg.ops.result = dlg.ui.textEdit.Text()
 	})
 	dlg.ui.tbClearError.Clicked().Attach(func() {
 		fmt.Println("Clicked tbClearError")
-		dlg.ui.textEdit.SetText(``)
+		dlg.ui.textEdit.SetText(`0`)
+		dlg.ops.result = dlg.ui.textEdit.Text()
 	})
 	dlg.ui.tbClear.Clicked().Attach(func() {
 		fmt.Println("Clicked tbClear")
-		dlg.ui.textEdit.SetText(``)
+		dlg.ui.textEdit.SetText(`0`)
+		dlg.ops.result = dlg.ui.textEdit.Text()
+	})
+	
+	dlg.ui.tbNumber0.Clicked().Attach(func() {
+		fmt.Println("Clicked tbNumber0")
+		appendByte(dlg, byte('0'))
+	})
+	dlg.ui.tbNumber1.Clicked().Attach(func() {
+		fmt.Println("Clicked tbNumber1")
+		appendByte(dlg, byte('1'))
+	})
+	dlg.ui.tbNumber2.Clicked().Attach(func() {
+		fmt.Println("Clicked tbNumber2")
+		appendByte(dlg, byte('2'))
+	})
+	dlg.ui.tbNumber3.Clicked().Attach(func() {
+		fmt.Println("Clicked tbNumber3")
+		appendByte(dlg, byte('3'))
+	})
+	dlg.ui.tbNumber4.Clicked().Attach(func() {
+		fmt.Println("Clicked tbNumber4")
+		appendByte(dlg, byte('4'))
+	})
+	dlg.ui.tbNumber5.Clicked().Attach(func() {
+		fmt.Println("Clicked tbNumber5")
+		appendByte(dlg, byte('5'))
+	})
+	dlg.ui.tbNumber6.Clicked().Attach(func() {
+		fmt.Println("Clicked tbNumber5")
+		appendByte(dlg, byte('6'))
+	})
+	dlg.ui.tbNumber7.Clicked().Attach(func() {
+		fmt.Println("Clicked tbNumber7")
+		appendByte(dlg, byte('7'))
+	})
+	dlg.ui.tbNumber8.Clicked().Attach(func() {
+		fmt.Println("Clicked tbNumber8")
+		appendByte(dlg, byte('8'))
+	})
+	dlg.ui.tbNumber9.Clicked().Attach(func() {
+		fmt.Println("Clicked tbNumber9")
+		appendByte(dlg, byte('9'))
+	})
+	dlg.ui.tbCharA.Clicked().Attach(func() {
+		fmt.Println("Clicked tbCharA")
+		appendByte(dlg, byte('A'))
+	})
+	dlg.ui.tbCharB.Clicked().Attach(func() {
+		fmt.Println("Clicked tbCharB")
+		appendByte(dlg, byte('B'))
+	})
+	dlg.ui.tbCharC.Clicked().Attach(func() {
+		fmt.Println("Clicked tbCharC")
+		appendByte(dlg, byte('C'))
+	})
+	dlg.ui.tbCharD.Clicked().Attach(func() {
+		fmt.Println("Clicked tbCharD")
+		appendByte(dlg, byte('D'))
+	})
+	dlg.ui.tbCharE.Clicked().Attach(func() {
+		fmt.Println("Clicked tbCharE")
+		appendByte(dlg, byte('E'))
+	})
+	dlg.ui.tbCharF.Clicked().Attach(func() {
+		fmt.Println("Clicked tbCharF")
+		appendByte(dlg, byte('F'))
+	})
+	
+	
+	dlg.ui.tbStatistical.Clicked().Attach(func() {
+		bStatisticalOpen = !bStatisticalOpen
+		
+		fmt.Println("Clicked tbStatistical")
+		dlg.ui.tbAverage.SetEnabled(bStatisticalOpen)
+		dlg.ui.tbSum.SetEnabled(bStatisticalOpen)
+		dlg.ui.tbs.SetEnabled(bStatisticalOpen)
+		dlg.ui.tbDat.SetEnabled(bStatisticalOpen)
+	})
+	dlg.ui.tbFnPI.Clicked().Attach(func() {
+		fmt.Println("Clicked tbFnPI")
+		dlg.ui.textEdit.SetText(`3.1415926`)
+	})
+	
+	dlg.ui.tbOpsAdd.Clicked().Attach(func() {
+		fmt.Println("Clicked tbOpsAdd")
+		//dlg.ui.textEdit.SetText(``)
+		dlg.ops.ops = "+"
+		dlg.ops.value = dlg.ui.textEdit.Text()
+		opsRun(dlg)
+	})
+	dlg.ui.tbOpsSub.Clicked().Attach(func() {
+		fmt.Println("Clicked tbOpsSub")
+		dlg.ops.ops = "-"
+		dlg.ops.value = dlg.ui.textEdit.Text()
+		opsRun(dlg)
+	})
+	dlg.ui.tbOpsMul.Clicked().Attach(func() {
+		fmt.Println("Clicked tbOpsMul")
+		dlg.ops.ops = "*"
+		dlg.ops.value = dlg.ui.textEdit.Text()
+		opsRun(dlg)
+	})
+	dlg.ui.tbOpsDiv.Clicked().Attach(func() {
+		fmt.Println("Clicked tbOpsDiv")
+		dlg.ops.ops = "/"
+		dlg.ops.value = dlg.ui.textEdit.Text()
+		opsRun(dlg)
+	})
+	dlg.ui.tbOpsEqual.Clicked().Attach(func() {
+		fmt.Println("Clicked tbOpsEqual")
+		opsRun(dlg)
 	})
 	
 	return dlg.Run(), nil

@@ -118,11 +118,13 @@ func (w *Dialog) init(owner walk.Form) (err error) {
 		}
 	}()
 
-	var font *walk.Font
-	if font == nil {
-		font = nil
+	font, err := walk.NewFont("Times New Roman", 40, walk.FontBold|walk.FontItalic)
+	if err != nil {
+		return err
 	}
-
+	defer font.Dispose()
+	w.SetFont(font)
+	
 	w.SetName("XPCalc")
 	if err := w.SetClientSize(walk.Size{560, 300}); err != nil {
 		return err
@@ -138,6 +140,9 @@ func (w *Dialog) init(owner walk.Form) (err error) {
 	}
 	w.ui.textEdit.SetName("textEdit")
 	if err := w.ui.textEdit.SetBounds(walk.Rectangle{pos_x, pos_y, add_w, add_h}); err != nil {
+		return err
+	}
+	if err := w.ui.textEdit.SetText(`0`); err != nil {
 		return err
 	}
 	
