@@ -20,6 +20,7 @@ type XPCalcOps struct {
 	//val_2nd string
 	ops string
 	value string
+	flag bool
 }
 
 type Dialog struct {
@@ -47,8 +48,10 @@ func opsRun(dlg *Dialog) {
 		case "=":
 			result = val_1st / val_2nd
 	}
+	dlg.ops.flag = true
 	dlg.ops.result = strconv.FormatFloat(result, 'g', 'e', 64)
 	dlg.ui.textEdit.SetText(dlg.ops.result)
+	
 	fmt.Printf("val_1st = %.6f\n", val_1st)
 	fmt.Printf("ops = %s\n", dlg.ops.ops)
 	fmt.Printf("val_2nd = %.6f\n", val_2nd)
@@ -121,6 +124,7 @@ func runDialog(owner walk.Form) (int, error) {
 		return 0, err
 	}
 	
+	dlg.ops.flag = false
 	dlg.ops.result = dlg.ui.textEdit.Text()
 	dlg.ops.value = dlg.ops.result
 	bStatisticalOpen := false
