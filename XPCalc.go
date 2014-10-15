@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	//"log"
+	. "math"
 	//"math/rand"
-	"math/pow"
 	"bytes"
 	//"strings"
 	//"time"
@@ -275,13 +275,15 @@ func runDialog(owner walk.Form) (int, error) {
 	})
 	dlg.ui.tbFnXpower3.Clicked().Attach(func() {
 		fmt.Println("Clicked tbFnXpower3")
-		dlg.ops.ops = "Power"
+		dlg.ops.ops = "POWER"
+		dlg.ops.val_1st = dlg.ui.textEdit.Text()
 		dlg.ops.val_2nd = "3"
 		opsRun(dlg)
 	})
 	dlg.ui.tbFnXpower2.Clicked().Attach(func() {
 		fmt.Println("Clicked tbFnXpower2")
-		dlg.ops.ops = "Power"
+		dlg.ops.ops = "POWER"
+		dlg.ops.val_1st = dlg.ui.textEdit.Text()
 		dlg.ops.val_2nd = "2"
 		opsRun(dlg)
 	})
