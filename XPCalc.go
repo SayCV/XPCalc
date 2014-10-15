@@ -4,6 +4,7 @@ import (
 	"fmt"
 	//"log"
 	//"math/rand"
+	"math/pow"
 	"bytes"
 	//"strings"
 	//"time"
@@ -50,8 +51,8 @@ func opsRun(dlg *Dialog) {
 			result = val_1st * val_2nd
 		case "/":
 			result = val_1st / val_2nd
-		case "=":
-			result = val_1st / val_2nd
+		case "POWER":
+			result = Pow(val_1st, val_2nd)
 	}
 	dlg.ops.flag = OPS_ACT
 	val := strconv.FormatFloat(result, 'g', 'e', 64)
@@ -272,6 +273,18 @@ func runDialog(owner walk.Form) (int, error) {
 		dlg.ui.tbs.SetEnabled(bStatisticalOpen)
 		dlg.ui.tbDat.SetEnabled(bStatisticalOpen)
 	})
+	dlg.ui.tbFnXpower3.Clicked().Attach(func() {
+		fmt.Println("Clicked tbFnXpower3")
+		dlg.ops.ops = "Power"
+		dlg.ops.val_2nd = "3"
+		opsRun(dlg)
+	})
+	dlg.ui.tbFnXpower2.Clicked().Attach(func() {
+		fmt.Println("Clicked tbFnXpower2")
+		dlg.ops.ops = "Power"
+		dlg.ops.val_2nd = "2"
+		opsRun(dlg)
+	})
 	dlg.ui.tbFnPI.Clicked().Attach(func() {
 		fmt.Println("Clicked tbFnPI")
 		dlg.ui.textEdit.SetText(`3.1415926`)
@@ -281,22 +294,32 @@ func runDialog(owner walk.Form) (int, error) {
 		fmt.Println("Clicked tbOpsAdd")
 		//dlg.ui.textEdit.SetText(``)
 		dlg.ops.ops = "+"
-		opsRun(dlg)
+		//opsRun(dlg)
 	})
 	dlg.ui.tbOpsSub.Clicked().Attach(func() {
 		fmt.Println("Clicked tbOpsSub")
 		dlg.ops.ops = "-"
-		opsRun(dlg)
+		//opsRun(dlg)
 	})
 	dlg.ui.tbOpsMul.Clicked().Attach(func() {
 		fmt.Println("Clicked tbOpsMul")
 		dlg.ops.ops = "*"
-		opsRun(dlg)
+		//opsRun(dlg)
 	})
 	dlg.ui.tbOpsDiv.Clicked().Attach(func() {
 		fmt.Println("Clicked tbOpsDiv")
 		dlg.ops.ops = "/"
-		opsRun(dlg)
+		//opsRun(dlg)
+	})
+	dlg.ui.tbOpsMod.Clicked().Attach(func() {
+		fmt.Println("Clicked tbOpsMod")
+		dlg.ops.ops = "/"
+		//opsRun(dlg)
+	})
+	dlg.ui.tbOpsPolar.Clicked().Attach(func() {
+		fmt.Println("Clicked tbOpsPolar")
+		dlg.ops.ops = "/"
+		//opsRun(dlg)
 	})
 	dlg.ui.tbOpsEqual.Clicked().Attach(func() {
 		fmt.Println("Clicked tbOpsEqual")
