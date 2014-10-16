@@ -2,6 +2,7 @@ XPCalc
 ======
 
 Based on the Walk library for the Go Programming Language.
+
 Based on the windows XP calc.
 
 Setup
@@ -33,6 +34,8 @@ resource.
 You can copy one of the application manifest files that come with the examples.
 
 To embed a manifest file as a resource, you can use the [rsrc tool](https://github.com/akavel/rsrc).
+
+Or you can use the [WINDRES mingw tool](http://www.mingw.org/wiki/MS_resource_compiler).
 
 IMPORTANT: If you don't embed a manifest as a resource, then you should not launch
 your executable before the manifest file is in place.
