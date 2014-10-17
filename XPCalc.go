@@ -42,6 +42,7 @@ func opsRun(dlg *Dialog) {
 	val_2nd, _ := strconv.ParseFloat(dlg.ops.val_2nd, 64)
 	var result float64
 	
+	result = val_2nd
 	switch dlg.ops.ops {
 		case "+":
 			result = val_1st + val_2nd
