@@ -76,6 +76,22 @@ func opsRun(dlg *Dialog) {
 			result = val_1st / val_2nd
 		case "POWER":
 			result = Pow(val_1st, val_2nd)
+		case "SIN":
+			result = Sin(val_1st)
+		case "COS":
+			result = Cos(val_1st)
+		case "TAN":
+			result = Tan(val_1st)
+		case "EXP":
+			result = Exp(val_1st)
+		case "LN":
+			result = Log10(val_1st)
+		case "LOG":
+			result = Log(val_1st)
+		case "NFACTORIAL":
+			result, _ = Frexp(val_1st)
+		case "XRECIPROCAL":
+			result = 1/(val_1st)
 	}
 	dlg.ops.flag = OPS_ACT
 	val := strconv.FormatFloat(result, 'g', 'e', 64)
@@ -324,6 +340,63 @@ func runDialog(owner walk.Form) (int, error) {
 		dlg.ui.tbs.SetEnabled(bStatisticalOpen)
 		dlg.ui.tbDat.SetEnabled(bStatisticalOpen)
 	})
+	
+	dlg.ui.tbFnSin.Clicked().Attach(func() {
+		fmt.Println("Clicked tbFnSin")
+		dlg.ops.ops = "SIN"
+		dlg.ops.val_1st = dlg.ui.textEdit.Text()
+		dlg.ops.val_2nd = ""
+		opsRun(dlg)
+	})
+	dlg.ui.tbFnCos.Clicked().Attach(func() {
+		fmt.Println("Clicked tbFnCos")
+		dlg.ops.ops = "COS"
+		dlg.ops.val_1st = dlg.ui.textEdit.Text()
+		dlg.ops.val_2nd = ""
+		opsRun(dlg)
+	})
+	dlg.ui.tbFnTan.Clicked().Attach(func() {
+		fmt.Println("Clicked tbFnTan")
+		dlg.ops.ops = "TAN"
+		dlg.ops.val_1st = dlg.ui.textEdit.Text()
+		dlg.ops.val_2nd = ""
+		opsRun(dlg)
+	})
+	dlg.ui.tbFnLeftBracket.Clicked().Attach(func() {
+		fmt.Println("Clicked tbFnLeftBracket")
+	})
+	dlg.ui.tbFnRightBracket.Clicked().Attach(func() {
+		fmt.Println("Clicked tbFnRightBracket")
+	})
+	dlg.ui.tbFnExp.Clicked().Attach(func() {
+		fmt.Println("Clicked tbFnExp")
+		dlg.ops.ops = "EXP"
+		dlg.ops.val_1st = dlg.ui.textEdit.Text()
+		dlg.ops.val_2nd = ""
+		opsRun(dlg)
+	})
+	dlg.ui.tbFnLn.Clicked().Attach(func() {
+		fmt.Println("Clicked tbFnLn")
+		dlg.ops.ops = "LN"
+		dlg.ops.val_1st = dlg.ui.textEdit.Text()
+		dlg.ops.val_2nd = ""
+		opsRun(dlg)
+	})
+	dlg.ui.tbFnLog.Clicked().Attach(func() {
+		fmt.Println("Clicked tbFnLog")
+		dlg.ops.ops = "LOG"
+		dlg.ops.val_1st = dlg.ui.textEdit.Text()
+		dlg.ops.val_2nd = ""
+		opsRun(dlg)
+	})
+	
+	dlg.ui.tbFnXpowerY.Clicked().Attach(func() {
+		fmt.Println("Clicked tbFnXpowerY")
+		dlg.ops.ops = "POWER"
+		dlg.ops.val_1st = dlg.ui.textEdit.Text()
+		dlg.ops.val_2nd = "3"
+		opsRun(dlg)
+	})
 	dlg.ui.tbFnXpower3.Clicked().Attach(func() {
 		fmt.Println("Clicked tbFnXpower3")
 		dlg.ops.ops = "POWER"
@@ -336,6 +409,20 @@ func runDialog(owner walk.Form) (int, error) {
 		dlg.ops.ops = "POWER"
 		dlg.ops.val_1st = dlg.ui.textEdit.Text()
 		dlg.ops.val_2nd = "2"
+		opsRun(dlg)
+	})
+	dlg.ui.tbFnNFactorial.Clicked().Attach(func() {
+		fmt.Println("Clicked tbFnNFactorial")
+		dlg.ops.ops = "NFACTORIAL"
+		dlg.ops.val_1st = dlg.ui.textEdit.Text()
+		dlg.ops.val_2nd = ""
+		opsRun(dlg)
+	})
+	dlg.ui.tbFnXReciprocal.Clicked().Attach(func() {
+		fmt.Println("Clicked tbFnXReciprocal")
+		dlg.ops.ops = "XRECIPROCAL"
+		dlg.ops.val_1st = dlg.ui.textEdit.Text()
+		dlg.ops.val_2nd = ""
 		opsRun(dlg)
 	})
 	dlg.ui.tbFnPI.Clicked().Attach(func() {
