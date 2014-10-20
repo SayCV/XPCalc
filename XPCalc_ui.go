@@ -985,8 +985,8 @@ func (w *Dialog) init(owner walk.Form) (err error) {
 	}
 	
 	pos_x += gap_x + add_w * 3/2; pos_y += 0; add_w += 0; add_h += 0
-	// tbFnLog
-	if w.ui.tbFnLog, err = walk.NewToolButton(w); err != nil {
+	// tbFnMS
+	if w.ui.tbFnMS, err = walk.NewToolButton(w); err != nil {
 		return err
 	}
 	w.ui.tbFnMS.SetName("tbFnMS")
