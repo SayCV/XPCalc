@@ -45,10 +45,10 @@ type XPCalcOps struct {
 	val_2nd    string
 	ops        string
 	flag       uint32
-	notation_old   uint32
-	notation_new   uint32
-	unit_bytes_old uint32
-	unit_bytes_new uint32
+	notation_old   int
+	notation_new   int
+	unit_bytes_old int
+	unit_bytes_new int
 }
 
 type Dialog struct {
