@@ -169,9 +169,10 @@ func rbNumberNotation_onCliced_btnInit(dlg *Dialog) {
 	result = dlg.ui.textEdit.Text()
 	i, err := strconv.ParseInt(result, dlg.ops.notation_old, 64)
 	if err != nil {
-		panic(err)
+		result = err
+	} else {
+		result = strconv.FormatInt(i, dlg.ops.notation_new)
 	}
-	result = strconv.FormatInt(i, dlg.ops.notation_new)
 	dlg.ui.textEdit.SetText(result)
 	dlg.ops.notation_old = dlg.ops.notation_new
 	
