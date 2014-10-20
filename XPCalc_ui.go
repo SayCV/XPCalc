@@ -989,11 +989,11 @@ func (w *Dialog) init(owner walk.Form) (err error) {
 	if w.ui.tbFnLog, err = walk.NewToolButton(w); err != nil {
 		return err
 	}
-	w.ui.tbFnLog.SetName("tbFnLog")
-	if err := w.ui.tbFnLog.SetBounds(walk.Rectangle{pos_x, pos_y, add_w, add_h}); err != nil {
+	w.ui.tbFnMS.SetName("tbFnMS")
+	if err := w.ui.tbFnMS.SetBounds(walk.Rectangle{pos_x, pos_y, add_w, add_h}); err != nil {
 		return err
 	}
-	if err := w.ui.tbFnLog.SetText(`Log`); err != nil {
+	if err := w.ui.tbFnMS.SetText(`MS`); err != nil {
 		return err
 	}
 	
@@ -1019,7 +1019,7 @@ func (w *Dialog) init(owner walk.Form) (err error) {
 	if w.ui.tbFnCos, err = walk.NewToolButton(w); err != nil {
 		return err
 	}
-	w.ui.tbFnCos.SetName("tbFnSin")
+	w.ui.tbFnCos.SetName("tbFnCos")
 	if err := w.ui.tbFnCos.SetBounds(walk.Rectangle{pos_x, pos_y, add_w, add_h}); err != nil {
 		return err
 	}
