@@ -25,10 +25,10 @@ const (
 // Constants for XPCalcOps.notation
 const (
 	OPS_NOTATION_NONE       = 0
-	OPS_NOTATION_16         = 1
-	OPS_NOTATION_10         = 2
-	OPS_NOTATION_08         = 3
-	OPS_NOTATION_02         = 4
+	OPS_NOTATION_16         = 16
+	OPS_NOTATION_10         = 10
+	OPS_NOTATION_08         = 8
+	OPS_NOTATION_02         = 2
 )
 
 // Constants for XPCalcOps.unit_bytes
@@ -157,6 +157,8 @@ func rbNumberNotation_onCliced_btnInit(dlg *Dialog) {
 	}
 	result = strconv.FormatInt(i, dlg.ops.notation_new)
 	dlg.ui.textEdit.SetText(result)
+	dlg.ops.notation_old = dlg.ops.notation_new
+	
 }
 
 func appendByte(dlg *Dialog, c byte) {
