@@ -9,6 +9,7 @@ import (
 	//"strings"
 	//"time"
 	"strconv"
+	//"errors"
 )
 
 import (
@@ -169,7 +170,7 @@ func rbNumberNotation_onCliced_btnInit(dlg *Dialog) {
 	result = dlg.ui.textEdit.Text()
 	i, err := strconv.ParseInt(result, dlg.ops.notation_old, 64)
 	if err != nil {
-		result = err
+		result = err.Error()
 	} else {
 		result = strconv.FormatInt(i, dlg.ops.notation_new)
 	}
