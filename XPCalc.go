@@ -22,11 +22,33 @@ const (
 	OPS_ACT         = 4
 )
 
+// Constants for XPCalcOps.notation
+const (
+	OPS_NOTATION_NONE       = 0
+	OPS_NOTATION_16         = 1
+	OPS_NOTATION_10         = 2
+	OPS_NOTATION_08         = 3
+	OPS_NOTATION_02         = 4
+)
+
+// Constants for XPCalcOps.unit_bytes
+const (
+	OPS_UNIT_BYTES_NONE       = 0
+	OPS_UNIT_BYTES_08         = 1
+	OPS_UNIT_BYTES_04         = 2
+	OPS_UNIT_BYTES_02         = 3
+	OPS_UNIT_BYTES_01         = 4
+)
+
 type XPCalcOps struct {
-	val_1st string
-	val_2nd string
-	ops string
-	flag uint32
+	val_1st    string
+	val_2nd    string
+	ops        string
+	flag       uint32
+	notation_old   uint32
+	notation_new   uint32
+	unit_bytes_old uint32
+	unit_bytes_new uint32
 }
 
 type Dialog struct {
@@ -113,6 +135,28 @@ func rbNumberNotation_onCliced_btnInit(dlg *Dialog) {
 	dlg.ui.tbNumber7.SetEnabled(!enable)
 	dlg.ui.tbNumber8.SetEnabled(!enable)
 	dlg.ui.tbNumber9.SetEnabled(!enable)
+	
+	if dlg.ui.rbNumberNotation_16.Checked() {
+		dlg.ops.notation_new = OPS_NOTATION_16
+	} else if dlg.ui.rbNumberNotation_10.Checked() {
+		dlg.ops.notation_new = OPS_NOTATION_10
+	} else if dlg.ui.rbNumberNotation_08.Checked() {
+		dlg.ops.notation_new = OPS_NOTATION_08
+	} else if dlg.ui.rbNumberNotation_02.Checked() {
+		dlg.ops.notation_new = OPS_NOTATION_02
+	} else {
+		dlg.ops.notation_new = OPS_NOTATION_NONE
+	}
+	
+	var result string
+	
+	result = dlg.ui.textEdit.Text()
+	i, err := strconv.ParseInt(result, dlg.ops.notation_old, 64)
+	if err != nil {
+		panic(err)
+	}
+	result = strconv.FormatInt(i, dlg.ops.notation_new)
+	dlg.ui.textEdit.SetText(result)
 }
 
 func appendByte(dlg *Dialog, c byte) {
@@ -146,10 +190,14 @@ func runDialog(owner walk.Form) (int, error) {
 		return 0, err
 	}
 	
-	dlg.ops.flag = OPS_NONE
-	dlg.ops.val_1st = "0"
-	dlg.ops.val_2nd = ""
-	bStatisticalOpen := false
+	dlg.ops.notation_old   = OPS_NOTATION_10
+	dlg.ops.notation_new   = dlg.ops.notation_old
+	dlg.ops.unit_bytes_old = OPS_UNIT_BYTES_08
+	dlg.ops.unit_bytes_new = dlg.ops.unit_bytes_old
+	dlg.ops.flag       = OPS_NONE
+	dlg.ops.val_1st    = "0"
+	dlg.ops.val_2nd    = ""
+	bStatisticalOpen  := false
 	
 	// TODO: Do further required setup, e.g. for event handling, here.
 	
