@@ -175,6 +175,10 @@ func rbNumberNotation_onCliced_btnInit(dlg *Dialog) {
 		result = strconv.FormatInt(i, dlg.ops.notation_new)
 	}
 	dlg.ui.textEdit.SetText(result)
+	
+	if dlg.ops.notation_old != dlg.ops.notation_new {
+		dlg.ops.flag = OPS_ACT
+	}
 	dlg.ops.notation_old = dlg.ops.notation_new
 	
 }
