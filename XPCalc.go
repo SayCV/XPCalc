@@ -6,7 +6,7 @@ import (
 	. "math"
 	//"math/rand"
 	"bytes"
-	//"strings"
+	"strings"
 	//"time"
 	"strconv"
 	//"errors"
@@ -20,6 +20,7 @@ import (
 const (
 	OPS_NONE        = 1
 	OPS_OBJ         = 2
+	OPS_ERR         = 3
 	OPS_ACT         = 4
 )
 
@@ -64,6 +65,11 @@ func opsRun(dlg *Dialog) {
 	val_1st, _ := strconv.ParseFloat(dlg.ops.val_1st, 64)
 	val_2nd, _ := strconv.ParseFloat(dlg.ops.val_2nd, 64)
 	var result float64
+	
+	if dlg.ops.flag == OPS_ERR {
+		fmt.Println("Please Clear Error")
+		return
+	}
 	
 	result = val_2nd
 	switch dlg.ops.ops {
@@ -168,17 +174,21 @@ func rbNumberNotation_onCliced_btnInit(dlg *Dialog) {
 	var result string
 	
 	result = dlg.ui.textEdit.Text()
-	i, err := strconv.ParseInt(result, dlg.ops.notation_old, 64)
-	if err != nil {
-		result = err.Error()
-	} else {
-		result = strconv.FormatInt(i, dlg.ops.notation_new)
+	
+	if dlg.ops.flag != OPS_ERR {
+		if dlg.ops.notation_old != dlg.ops.notation_new {
+			dlg.ops.flag = OPS_ACT
+		}
+		i, err := strconv.ParseInt(result, dlg.ops.notation_old, 64)
+		if err != nil {
+			result = strings.Split(err.Error(), ":")[1] + strings.Split(err.Error(), ":")[2]
+			dlg.ops.flag = OPS_ERR
+		} else {
+			result = strconv.FormatInt(i, dlg.ops.notation_new)
+		}
 	}
 	dlg.ui.textEdit.SetText(result)
 	
-	if dlg.ops.notation_old != dlg.ops.notation_new {
-		dlg.ops.flag = OPS_ACT
-	}
 	dlg.ops.notation_old = dlg.ops.notation_new
 	
 }
@@ -189,11 +199,11 @@ func appendByte(dlg *Dialog, c byte) {
 	
 	if dlg.ops.flag == OPS_ACT {
 		result = ""
+	} else if dlg.ops.flag == OPS_ERR {
+		result = ""
 	} else {
 		result = dlg.ui.textEdit.Text()
 	}
-	
-	dlg.ops.flag = OPS_OBJ
 	
 	if result == "0" {
 		result = string(c)
@@ -203,6 +213,7 @@ func appendByte(dlg *Dialog, c byte) {
 		buffer.WriteString(string(c))
 		result = buffer.String()
 	}
+	
 	dlg.ui.textEdit.SetText(result)
 	dlg.ops.flag = OPS_OBJ
 	dlg.ops.val_2nd = result
